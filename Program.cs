@@ -1,7 +1,18 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
+using WebApplication1.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<AppIdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("MyDatabase")));
+
+builder.Services.AddIdentity<AppUser, IdentityRole>().
+    AddEntityFrameworkStores<AppIdentityContext>().
+    AddDefaultTokenProviders();
 
 var app = builder.Build();
 
