@@ -10,7 +10,14 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppIdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("MyDatabase")));
 
-builder.Services.AddIdentity<AppUser, IdentityRole>().
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+}).
     AddEntityFrameworkStores<AppIdentityContext>().
     AddDefaultTokenProviders();
 
