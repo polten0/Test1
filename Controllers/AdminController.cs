@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -7,9 +8,12 @@ namespace WebApplication1.Controllers
     public class AdminController : Controller
     {
         private UserManager<AppUser> userManager;
-        public AdminController(UserManager<AppUser> userManager)
+        private IPasswordHasher<AppUser> passwordHasher;
+        public AdminController(UserManager<AppUser> userManager, 
+            IPasswordHasher passwordHasher)
         {
             this.userManager = userManager;
+            this.passwordHasher = passwordHasher;
         }
         public IActionResult Index()
         {
@@ -69,9 +73,33 @@ namespace WebApplication1.Controllers
 
             return View("Index", userManager.Users);
         }
-
+        [HttpGet]
         public IActionResult Edit(string id)
         {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(string id, string email, string password)
+        {
+            AppUser? user = await userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                user.Email = email;
+                user.PasswordHash = passwordHasher.HashPassword(user, password);
+
+                IdentityResult result = await userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    // sad
+                }
+            }
+
             return View();
         }
     }
