@@ -10,7 +10,7 @@ namespace WebApplication1.Controllers
         private UserManager<AppUser> userManager;
         private IPasswordHasher<AppUser> passwordHasher;
         public AdminController(UserManager<AppUser> userManager, 
-            IPasswordHasher passwordHasher)
+            IPasswordHasher<AppUser> passwordHasher)
         {
             this.userManager = userManager;
             this.passwordHasher = passwordHasher;

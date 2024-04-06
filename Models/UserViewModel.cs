@@ -11,4 +11,12 @@ namespace WebApplication1.Models
         [Required]
         public string Password { get; set; }
     }
+
+    public class LiginModel
+    {
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
+    }
 }
